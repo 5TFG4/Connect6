@@ -27,6 +27,7 @@ class board:
             return False
 
     def selecting(self,changing):
+        # This is where comments go so I don't have to ask so many questions
         self.selected_list = [[self.selected_list[0][0]+changing[0][0],self.selected_list[0][1]+changing[0][1]],
         [self.selected_list[1][0]+changing[1][0],self.selected_list[1][1]+changing[1][1]]]
         for idx in xrange(len(self.selected_list)):
@@ -38,12 +39,11 @@ class board:
         return [[0,0],[0,0]]
 
 
-    def check_board(self):
+    def check_win(self):
         sum_list = [sum(self.contain[y][x:x+self.win_length]) for y in xrange(self.size) for x in xrange(self.size-self.win_length+1) if self.contain[y][x] != 0]
         sum_list += [sum([self.contain[y+idx][x] for idx in xrange(self.win_length)]) for y in xrange(self.size-self.win_length+1) for x in xrange(self.size) if self.contain[y][x] != 0]
         sum_list += [sum([self.contain[y+idx][x+idx] for idx in xrange(self.win_length)]) for y in xrange(self.size-self.win_length+1) for x in xrange(self.size-self.win_length+1) if self.contain[y][x] != 0]
         sum_list += [sum([self.contain[y+idx][x-idx] for idx in xrange(self.win_length)]) for y in xrange(self.size-self.win_length+1) for x in xrange(self.win_length-1,self.size) if self.contain[y][x] != 0]
-        print "sum_list" + str(sum_list)
         if self.win_length in sum_list:
             return 1
         elif -self.win_length in sum_list:

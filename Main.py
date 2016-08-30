@@ -22,53 +22,48 @@ def draw():
     screen.blit(board.draw(screen_size[1]-(2*space)), (space, space))
     pygame.display.update()
 
-def main():
-    global screen,player,board,space,x_loc,y_loc,changing
-    while True:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+def event():
+    global player,board,changing
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if player == 1 and event.type == KEYDOWN:
             pressed_keys = pygame.key.get_pressed()
-            if pressed_keys[K_w]:
+            if event.key == K_w:
                 changing[0][1] -= 1
-            elif pressed_keys[K_s]:
+            elif event.key == K_s:
                 changing[0][1] += 1
-            elif pressed_keys[K_a]:
+            elif event.key == K_a:
                 changing[0][0] -= 1
-            elif pressed_keys[K_d]:
+            elif event.key == K_d:
                 changing[0][0] += 1
-            if pressed_keys[K_SPACE] and player == 1:
+            if event.key == K_SPACE and player == 1:
                 changing = board.selecting(changing)
                 if board.play_piece(1):
                     player = -player
-            if pressed_keys[K_UP]:
+        elif player == -1 and event.type == KEYDOWN:
+            if event.key == K_UP:
                 changing[1][1] -= 1
-            elif pressed_keys[K_DOWN]:
+            elif event.key == K_DOWN:
                 changing[1][1] += 1
-            elif pressed_keys[K_LEFT]:
+            elif event.key == K_LEFT:
                 changing[1][0] -= 1
-            elif pressed_keys[K_RIGHT]:
+            elif event.key == K_RIGHT:
                 changing[1][0] += 1
-            if pressed_keys[K_RETURN] and player == -1:
+            if event.key == K_RETURN and player == -1:
                 changing = board.selecting(changing)
                 if board.play_piece(-1):
                     player = -player
-                #if event.key == K_enter and player == -1:
-                #    changing = board.selecting(changing)
-                #    if board.play_piece(-1):
-                #        player = -player
 
-#        while board.play_piece([x_loc,y_loc],player) == False:
-#            x_loc = select_index("x location")
-#            y_loc = select_index("y location")
-        #print "winner" + str(board.check_board())
-#        player = -player
-        #print "\n"
-#        time_passed += clock.tick()
-#        if
+def main():
+    global board
+    while board.check_win() == 0:
+        event()
         draw()
-
+    print "Winner is "+str(board.check_win())
+    pygame.quit()
+    sys.exit()
 
 if __name__ == "__main__":
     board_size = 19
@@ -83,10 +78,5 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(screen_size, 0, 32)
     pygame.display.set_caption("Connect6")
     board = board(board_size,win_length)
-    board.print_board()
     changing = [[0,0],[0,0]]
-    x_loc = 0
-    y_loc = 0
-    #x_loc = select_index("x location")
-    #y_loc = select_index("y location")
     main()
