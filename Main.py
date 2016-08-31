@@ -23,7 +23,7 @@ def draw():
     pygame.display.update()
 
 def event():
-    global player,board,changing
+    global player,board,changing,player_move
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -41,7 +41,8 @@ def event():
             if event.key == K_SPACE and player == 1:
                 changing = board.selecting(changing)
                 if board.play_piece(1):
-                    player = -player
+                    player_move += 1
+                    player_switch()
         elif player == -1 and event.type == KEYDOWN:
             if event.key == K_UP:
                 changing[1][1] -= 1
@@ -54,7 +55,13 @@ def event():
             if event.key == K_RETURN and player == -1:
                 changing = board.selecting(changing)
                 if board.play_piece(-1):
-                    player = -player
+                    player_move += 1
+                    player_switch()
+
+def player_switch():
+    global player_move,player
+    if player_move == piece_pre_player:
+        player = -player
 
 def main():
     global board
@@ -72,6 +79,9 @@ if __name__ == "__main__":
     player = 1
     space = 30
     FPS = 30
+    piece_pre_player = 2
+    first_player_piece = 1
+    player_move = piece_pre_player-first_player_piece
     screen_size = (screen_width,screen_width)
     pygame.init()
     clock = pygame.time.Clock()
