@@ -1,4 +1,4 @@
-from Board import board
+from Board import Board
 import sys
 import pygame
 from pygame.locals import *
@@ -22,7 +22,7 @@ def draw():
     screen.blit(board.draw(screen_size[1]-(2*space)), (space, space))
     pygame.display.update()
 
-def event():
+def event_listener():
     global player,board,changing,player_move
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -60,33 +60,49 @@ def event():
 
 def player_switch():
     global player_move,player
-    if player_move == piece_pre_player:
+    if player_move >= piece_pre_player:
+        player_move = 0
         player = -player
+    print "Moves: " + str(piece_pre_player - player_move)
+
 
 def main():
     global board
     while board.check_win() == 0:
-        event()
+        event_listener()
         draw()
     print "Winner is "+str(board.check_win())
-    pygame.quit()
-    sys.exit()
+    restart_input = raw_input("Again?(y/n)")
+    if restart_input == "y":
+        print "Restarting!"
+        start_new_game()
+    elif restart_input == "n":
+        print "Fine"
+        pygame.quit()
+        sys.exit()
+
+def start_new_game():
+    global player_move,player,board,clock,changing
+    player = first_player
+    player_move = piece_pre_player-first_player_piece
+    clock = pygame.time.Clock()
+    board = Board(board_size,win_length)
+    changing = [[0,0],[0,0]]
+    main()
+
 
 if __name__ == "__main__":
     board_size = 19
-    screen_width = 640
-    win_length = 3
-    player = 1
+    screen_width = 1000
+    screen_height = 1000
+    win_length = 6
+    first_player = 1
     space = 30
     FPS = 30
     piece_pre_player = 2
     first_player_piece = 1
-    player_move = piece_pre_player-first_player_piece
-    screen_size = (screen_width,screen_width)
+    screen_size = (screen_width,screen_height)
     pygame.init()
-    clock = pygame.time.Clock()
     screen = pygame.display.set_mode(screen_size, 0, 32)
     pygame.display.set_caption("Connect6")
-    board = board(board_size,win_length)
-    changing = [[0,0],[0,0]]
-    main()
+    start_new_game()

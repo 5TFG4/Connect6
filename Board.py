@@ -1,7 +1,7 @@
 import pygame,pygame.gfxdraw
 from pygame.locals import *
 
-class board:
+class Board:
     def __init__(self,size,win_length):
         self.background = Color(26,153,0)
         self.line_width = 3
@@ -9,7 +9,7 @@ class board:
         self.size = size
         self.win_length = win_length
         self.contain = [[0 for idx in xrange(self.size)] for jdx in xrange(self.size)]
-        self.selected_list = [(0,0),(1,0)]
+        self.selected_list = [(size/2,size/2),(size/2,size/2)]
         self.surface_size = None
         self.piece_size = None
         self.gap = None
