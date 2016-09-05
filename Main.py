@@ -3,12 +3,15 @@ import sys
 import pygame
 from pygame.locals import *
 
-def select_index(info):
+def select_index(input_range,info):
     correct_input = False
     while correct_input == False:
         try:
             input_idx = int(input(info))
-            correct_input = True
+            if input_idx >= input_range[0] and input_idx <= input_range[1]:
+                correct_input = True
+            else:
+                print"Not in range, please try again"
         except:
             print"Incorrect input, only number is accepted, please try again"
             sys.exc_clear()
@@ -23,12 +26,12 @@ def draw():
     pygame.display.update()
 
 def event_listener():
-    global player,board,changing,player_move
+    global player,board,changing
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        if player == 1 and event.type == KEYDOWN:
+        if player == 1 and player1 == 'p' and event.type == KEYDOWN:
             pressed_keys = pygame.key.get_pressed()
             if event.key == K_w:
                 changing[0][1] -= 1
@@ -40,10 +43,8 @@ def event_listener():
                 changing[0][0] += 1
             if event.key == K_SPACE and player == 1:
                 changing = board.selecting(changing)
-                if board.play_piece(1):
-                    player_move += 1
-                    player_switch()
-        elif player == -1 and event.type == KEYDOWN:
+                player_play_piece(1)
+        elif player == -1 and player2 == 'p' and event.type == KEYDOWN:
             if event.key == K_UP:
                 changing[1][1] -= 1
             elif event.key == K_DOWN:
@@ -54,9 +55,13 @@ def event_listener():
                 changing[1][0] += 1
             if event.key == K_RETURN and player == -1:
                 changing = board.selecting(changing)
-                if board.play_piece(-1):
-                    player_move += 1
-                    player_switch()
+                player_play_piece(-1)
+
+def player_play_piece(player):
+    global board,player_move
+    if board.play_piece(player):
+        player_move += 1
+        player_switch()
 
 def player_switch():
     global player_move,player
@@ -66,7 +71,7 @@ def player_switch():
     print "Moves: " + str(piece_pre_player - player_move)
 
 
-def main():
+def p_main():
     global board
     while board.check_win() == 0:
         event_listener()
@@ -81,6 +86,10 @@ def main():
         pygame.quit()
         sys.exit()
 
+def c_main():
+    global board
+    while board.check_win() == 0
+
 def start_new_game():
     global player_move,player,board,clock,changing
     player = first_player
@@ -88,21 +97,39 @@ def start_new_game():
     clock = pygame.time.Clock()
     board = Board(board_size,win_length)
     changing = [[0,0],[0,0]]
-    main()
+    p_main()
 
 
-if __name__ == "__main__":
-    board_size = 19
+
+
+board_size = 19
+win_length = 6
+first_player = 1
+piece_pre_player = 2
+first_player_piece = 1
+player1 = "p"
+player2 = "p"
+gamemod = None
+if gamemod == None:
+    gamemod_info = ("0:PVP","1:PVC","2:CVC")
+    info = ""
+    for txt in gamemod_info:
+        info += txt
+        info += "\n"
+    gamemod = select_index((0,len(gamemod_info)-1),info)
+if gamemod == 0 or gamemod == 1:
     screen_width = 1000
     screen_height = 1000
-    win_length = 6
-    first_player = 1
     space = 30
     FPS = 30
-    piece_pre_player = 2
-    first_player_piece = 1
     screen_size = (screen_width,screen_height)
     pygame.init()
     screen = pygame.display.set_mode(screen_size, 0, 32)
     pygame.display.set_caption("Connect6")
-    start_new_game()
+    if gamemod == 1:
+        player2 = 'c'
+elif gamemod == 2:
+    player1 = 'c'
+    player2 = 'c'
+
+start_new_game()

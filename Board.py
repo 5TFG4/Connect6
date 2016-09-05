@@ -78,6 +78,5 @@ class Board:
             ((self.selected_list[0][0]*self.gap,self.selected_list[0][1]*self.gap),(self.piece_size*2,self.piece_size*2)),self.box_width)
         return self.surface
 
-    def print_board(self):
-        for idx in xrange(self.size):
-            print self.contain[idx]
+    def get_board(self):
+        return self.contain
