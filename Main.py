@@ -31,7 +31,7 @@ def event_listener():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        if player == 1 and player1 == 'p' and event.type == KEYDOWN:
+        if player == 1 and player_type[0] == 'p' and event.type == KEYDOWN:
             pressed_keys = pygame.key.get_pressed()
             if event.key == K_w:
                 changing[0][1] -= 1
@@ -41,10 +41,10 @@ def event_listener():
                 changing[0][0] -= 1
             elif event.key == K_d:
                 changing[0][0] += 1
-            if event.key == K_SPACE and player == 1:
+            if event.key == K_SPACE:
                 changing = board.selecting(changing)
-                player_play_piece(1)
-        elif player == -1 and player2 == 'p' and event.type == KEYDOWN:
+                player_play_piece(player)
+        elif player == -1 and player_type[1] == 'p' and event.type == KEYDOWN:
             if event.key == K_UP:
                 changing[1][1] -= 1
             elif event.key == K_DOWN:
@@ -53,9 +53,9 @@ def event_listener():
                 changing[1][0] -= 1
             elif event.key == K_RIGHT:
                 changing[1][0] += 1
-            if event.key == K_RETURN and player == -1:
+            if event.key == K_RETURN:
                 changing = board.selecting(changing)
-                player_play_piece(-1)
+                player_play_piece(player)
 
 def player_play_piece(player):
     global board,player_move
@@ -70,11 +70,32 @@ def player_switch():
         player = -player
     print "Moves: " + str(piece_pre_player - player_move)
 
+def c_decision(playernum):
+    if c_play_loc != None and board.c_selecting(playernum,c_play_loc):
+        c_play_loc = None
+        return True
+    return False
 
-def p_main():
-    global board
-    while board.check_win() == 0:
+def c_main(playernum):
+    while player == playernum:
+        if c_decision(playernum):
+            player_play_piece(playernum)
+
+def p_main(playernum):
+    while player == playernum:
         event_listener()
+        draw()
+
+
+def mian():
+    global board
+    num = 1
+    while board.check_win() == 0:
+        if player_type[int((0.5*num) + 0.5)] == 'p':
+            p_main(num)
+        elif player_type[int((0.5*num) + 0.5)] == 'c':
+            c_main(num)
+        num = -num
         draw()
     print "Winner is "+str(board.check_win())
     restart_input = raw_input("Again?(y/n)")
@@ -86,9 +107,6 @@ def p_main():
         pygame.quit()
         sys.exit()
 
-def c_main():
-    global board
-    while board.check_win() == 0
 
 def start_new_game():
     global player_move,player,board,clock,changing
@@ -97,18 +115,15 @@ def start_new_game():
     clock = pygame.time.Clock()
     board = Board(board_size,win_length)
     changing = [[0,0],[0,0]]
-    p_main()
-
-
-
+    c_play_loc = None
+    mian()
 
 board_size = 19
 win_length = 6
 first_player = 1
 piece_pre_player = 2
 first_player_piece = 1
-player1 = "p"
-player2 = "p"
+player_type = ['p','p']
 gamemod = None
 if gamemod == None:
     gamemod_info = ("0:PVP","1:PVC","2:CVC")
@@ -127,9 +142,8 @@ if gamemod == 0 or gamemod == 1:
     screen = pygame.display.set_mode(screen_size, 0, 32)
     pygame.display.set_caption("Connect6")
     if gamemod == 1:
-        player2 = 'c'
+        player_type[1] = 'c'
 elif gamemod == 2:
-    player1 = 'c'
-    player2 = 'c'
+    player_type = ['c','c']
 
 start_new_game()

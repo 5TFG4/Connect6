@@ -26,6 +26,16 @@ class Board:
         else:
             return False
 
+    def c_selecting(self,player,selecting):
+        if player == 1 and self.contain[selecting[1],selecting[0]] == 0:
+            self.selected_list[0] = selecting
+            return True
+        elif player == -1 and self.contain[selecting[1],selecting[0]] == 0:
+            self.selected_list[1] = selecting
+            return True
+        return False
+
+
     def selecting(self,changing):
         # This is where comments go so I don't have to ask so many questions
         self.selected_list = [[self.selected_list[0][0]+changing[0][0],self.selected_list[0][1]+changing[0][1]],
