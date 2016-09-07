@@ -1,5 +1,6 @@
 from Board import Board
 import sys
+import random
 import pygame
 from pygame.locals import *
 
@@ -68,9 +69,13 @@ def player_switch():
     if player_move >= piece_pre_player:
         player_move = 0
         player = -player
-    print "Moves: " + str(piece_pre_player - player_move)
+
+def change_c_play_loc(loc):
+    global c_play_loc
+    c_play_loc = loc
 
 def c_decision(playernum):
+    global c_play_loc
     if c_play_loc != None and board.c_selecting(playernum,c_play_loc):
         c_play_loc = None
         return True
@@ -78,6 +83,7 @@ def c_decision(playernum):
 
 def c_main(playernum):
     while player == playernum:
+        change_c_play_loc([random.randint(0,board_size-1),random.randint(0,board_size-1)])
         if c_decision(playernum):
             player_play_piece(playernum)
 
@@ -89,23 +95,28 @@ def p_main(playernum):
 
 def mian():
     global board
-    num = 1
-    while board.check_win() == 0:
-        if player_type[int((0.5*num) + 0.5)] == 'p':
-            p_main(num)
-        elif player_type[int((0.5*num) + 0.5)] == 'c':
-            c_main(num)
-        num = -num
-        draw()
-    print "Winner is "+str(board.check_win())
-    restart_input = raw_input("Again?(y/n)")
-    if restart_input == "y":
-        print "Restarting!"
-        start_new_game()
-    elif restart_input == "n":
-        print "Fine"
-        pygame.quit()
-        sys.exit()
+    while True:
+        num = 1
+        while board.check_win() == 0:
+            if player_type[int((-0.5*num) + 0.5)] == 'p':
+                p_main(num)
+            elif player_type[int((-0.5*num) + 0.5)] == 'c':
+                c_main(num)
+            num = -num
+            if gamemod == 0 or gamemod == 1 or show_process == True:
+                draw()
+        print "Winner is "+str(board.check_win())
+        if gamemod == 2:
+            start_new_game()
+        else:
+            restart_input = raw_input("Again?(y/n)")
+            if restart_input == "y":
+                print "Restarting!"
+                start_new_game()
+            elif restart_input == "n":
+                print "Fine"
+                pygame.quit()
+                sys.exit()
 
 
 def start_new_game():
@@ -116,7 +127,7 @@ def start_new_game():
     board = Board(board_size,win_length)
     changing = [[0,0],[0,0]]
     c_play_loc = None
-    mian()
+
 
 board_size = 19
 win_length = 6
@@ -124,15 +135,15 @@ first_player = 1
 piece_pre_player = 2
 first_player_piece = 1
 player_type = ['p','p']
+show_process = True
 gamemod = None
 if gamemod == None:
     gamemod_info = ("0:PVP","1:PVC","2:CVC")
     info = ""
     for txt in gamemod_info:
-        info += txt
-        info += "\n"
+        info += txt + '\n'
     gamemod = select_index((0,len(gamemod_info)-1),info)
-if gamemod == 0 or gamemod == 1:
+if gamemod == 0 or gamemod == 1 or show_process == True:
     screen_width = 1000
     screen_height = 1000
     space = 30
@@ -141,9 +152,10 @@ if gamemod == 0 or gamemod == 1:
     pygame.init()
     screen = pygame.display.set_mode(screen_size, 0, 32)
     pygame.display.set_caption("Connect6")
-    if gamemod == 1:
-        player_type[1] = 'c'
+if gamemod == 1:
+    player_type[1] = 'c'
 elif gamemod == 2:
     player_type = ['c','c']
 
 start_new_game()
+mian()
