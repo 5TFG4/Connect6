@@ -27,10 +27,10 @@ class Board:
             return False
 
     def c_selecting(self,player,selecting):
-        if player == 1 and self.contain[selecting[1],selecting[0]] == 0:
+        if player == 1 and self.contain[selecting[1]][selecting[0]] == 0:
             self.selected_list[0] = selecting
             return True
-        elif player == -1 and self.contain[selecting[1],selecting[0]] == 0:
+        elif player == -1 and self.contain[selecting[1]][selecting[0]] == 0:
             self.selected_list[1] = selecting
             return True
         return False
