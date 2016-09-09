@@ -36,7 +36,7 @@ class Board:
         return False
 
 
-    def selecting(self,changing):
+    def p_selecting(self,changing):
         # This is where comments go so I don't have to ask so many questions
         self.selected_list = [[self.selected_list[0][0]+changing[0][0],self.selected_list[0][1]+changing[0][1]],
         [self.selected_list[1][0]+changing[1][0],self.selected_list[1][1]+changing[1][1]]]
@@ -88,5 +88,8 @@ class Board:
             ((self.selected_list[0][0]*self.gap,self.selected_list[0][1]*self.gap),(self.piece_size*2,self.piece_size*2)),self.box_width)
         return self.surface
 
+    def get_board_size(self):
+        return self.size
+        
     def get_board(self):
         return self.contain
