@@ -89,7 +89,11 @@ class Board:
         return self.surface
 
     def get_board_size(self):
+<<<<<<< HEAD
         return self.size
+=======
+        return self.size
+>>>>>>> origin/master
         
     def get_board(self):
         return self.contain
