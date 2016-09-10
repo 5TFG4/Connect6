@@ -1,5 +1,6 @@
 import sys
-sys.path.append("Clairvoyant")
+import copy
+sys.path.append('..')
 from Clairvoyant.AI import AI
 import random
 import pygame
@@ -21,7 +22,6 @@ def select_index(input_range,info):
     return input_idx
 
 def draw():
-    global screen,board,clock
     clock.tick(FPS)
     screen.fill(Color(0,0,0))
     screen.blit(rule.get_board().draw(screen_size[1]-(2*space)), (space, space))
@@ -62,14 +62,16 @@ def event_listener():
                 rule.player_play_piece(rule.get_player())
 
 def mian():
-    global rule,player
     while True:
-        while rule.mian() == 0:
+        while rule.main() == 0:
             if gamemod == 0 or gamemod == 1 or show_process:
                 event_listener()
                 draw()
             if gamemod == 1 or gamemod == 2:
-                rule.change_c_play_loc(ai.make_decision_by_board(rule.get_board(),rule.get_player(),rule.get_player_move()))
+                #print ai.simulation(rule.get_board(),rule.get_player(),rule.get_player_move())
+                rule.change_c_play_loc(ai.make_decision(copy.deepcopy(rule.get_board()),copy.deepcopy(rule.get_player()),copy.deepcopy(rule.get_player_move())))
+            #print '******'
+            #print "check" + str(rule.get_board().get_board())
         print "Winner is "+str(rule.get_board().check_win())
         if gamemod == 2:
             rule.start_new_game(None,None,None)
@@ -110,8 +112,9 @@ if gamemod == 0 or gamemod == 1 or show_process:
     clock = pygame.time.Clock()
 if gamemod == 1:
     player_type[1] = 'c'
+    ai = AI(Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,player_type))
 elif gamemod == 2:
     player_type = ['c','c']
+    ai = AI(Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,player_type))
 rule = Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,player_type)
-ai = AI(rule)
 mian()

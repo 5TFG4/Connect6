@@ -16,9 +16,16 @@ class Rule:
         self.board_size = board_size
         self.win_length = win_length
         if board == None:
+            print "None"
             self.board = Board(self.board_size,self.win_length)
         else:
+            print "NOOOOOOOOOOOOOOOO"
             self.board = board
+        self.save = []
+
+    def save(self):
+        self.save = []
+
 
 
     def change_changing(self,idx,jdx,value):
@@ -43,7 +50,6 @@ class Rule:
 
     def change_c_play_loc(self,loc):
         self.c_play_loc = loc
-        self.c_last_move = None
 
     def c_main(self,playernum):
         #print self.c_decision(playernum)
@@ -56,7 +62,7 @@ class Rule:
         self.changing = self.board.p_selecting(self.changing)
         self.player_switch()
 
-    def mian(self):
+    def main(self):
         if self.player_type[int((-0.5*self.player)+0.5)] == 'p':
             self.p_main(self.player)
         elif self.player_type[int((-0.5*self.player)+0.5)] == 'c':
