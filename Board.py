@@ -1,3 +1,5 @@
+import random
+import copy
 import pygame,pygame.gfxdraw
 from pygame.locals import *
 
@@ -14,26 +16,42 @@ class Board:
         self.piece_size = None
         self.gap = None
         self.surface = None
+        self.empty_loc_list = [[x,y] for x in xrange(self.size-1) for y in xrange (self.size-1) if self.contain[y][x] == 0]
+
+    def get_empty_loc_list(self):
+        return self.empty_loc_list
+
+    def get_random_loc(self):
+        loc = random.choice(self.empty_loc_list)
+        return loc
+
+    def update_empty_loc_list(self):
+        self.empty_loc_list = [[x,y] for x in xrange(self.size-1) for y in xrange (self.size-1) if self.contain[y][x] == 0]
+
+    def is_empty(self,loc):
+        if loc in self.empty_loc_list:
+            return True
+        else:
+            return False
 
     def play_piece(self,player):
         if player == 1:
             selected = self.selected_list[0]
         elif player == -1:
             selected = self.selected_list[1]
-        if self.contain[selected[1]][selected[0]] == 0:
+        if self.is_empty(selected):
             self.contain[selected[1]][selected[0]] = player
+            self.update_empty_loc_list()
+            #self.update_empty_loc_list()
             return True
         else:
             return False
 
     def c_selecting(self,player,selecting):
-        if player == 1 and self.contain[selecting[1]][selecting[0]] == 0:
+        if player == 1:
             self.selected_list[0] = selecting
-            return True
-        elif player == -1 and self.contain[selecting[1]][selecting[0]] == 0:
+        elif player == -1:
             self.selected_list[1] = selecting
-            return True
-        return False
 
 
     def p_selecting(self,changing):
@@ -89,11 +107,7 @@ class Board:
         return self.surface
 
     def get_board_size(self):
-<<<<<<< HEAD
         return self.size
-=======
-        return self.size
->>>>>>> origin/master
-        
+
     def get_board(self):
         return self.contain
