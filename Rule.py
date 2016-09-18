@@ -70,6 +70,7 @@ class Rule:
 
     def start_new_game(self,board,player,player_move):
         if player != None:
+            #print 'yeah'
             self.player = player
         else:
             self.player = self.first_player
@@ -78,7 +79,10 @@ class Rule:
         else:
             self.player_move = self.piece_pre_player-self.first_player_piece
         if board != None:
+            #print"b: " + str(self.board.get_board())
+            #print"in: " + str(board.get_board())
             self.board = board
+            #print"after: " + str(self.board.get_board())
         else:
             self.board = Board(self.board_size,self.win_length)
         self.changing = [[0,0],[0,0]]

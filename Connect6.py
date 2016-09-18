@@ -70,7 +70,10 @@ def main():
             if gamemod == 1 or gamemod == 2:
                 #print ai.simulation(rule.get_board(),rule.get_player(),rule.get_player_move())
                 if player_type[int((-0.5*rule.get_player())+0.5)] == 'c':
-                    rule.c_decision(ai.make_decision(copy.deepcopy(rule.get_board()),copy.deepcopy(rule.get_player()),copy.deepcopy(rule.get_player_move())))
+                    loc = ai.make_decision(rule.get_board(),rule.get_player(),rule.get_player_move())
+                    rule.c_decision(loc)
+                    #print 'check 3: ' + str(rule.get_board().is_empty(loc))
+                    #print "empty_loc_list len 3: " + str (len(rule.get_board().get_empty_loc_list()))
             #print '******'
             #print "check" + str(rule.get_board().get_board())
         print "Winner is "+str(rule.get_board().check_win())
@@ -91,7 +94,7 @@ win_length = 6
 first_player = 1
 piece_pre_player = 2
 first_player_piece = 1
-sim_num = 50
+sim_num = 10
 player_type = ['p','p']
 show_process = True
 gamemod = None

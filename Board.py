@@ -25,8 +25,9 @@ class Board:
         loc = random.choice(self.empty_loc_list)
         return loc
 
-    def update_empty_loc_list(self):
-        self.empty_loc_list = [[x,y] for x in xrange(self.size-1) for y in xrange (self.size-1) if self.contain[y][x] == 0]
+    def update_empty_loc_list(self,loc):
+        self.empty_loc_list.remove(loc)
+        #self.empty_loc_list = [[x,y] for x in xrange(self.size-1) for y in xrange (self.size-1) if self.contain[y][x] == 0]
 
     def is_empty(self,loc):
         if loc in self.empty_loc_list:
@@ -41,7 +42,7 @@ class Board:
             selected = self.selected_list[1]
         if self.is_empty(selected):
             self.contain[selected[1]][selected[0]] = player
-            self.update_empty_loc_list()
+            self.update_empty_loc_list(selected)
             #self.update_empty_loc_list()
             return True
         else:
