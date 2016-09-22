@@ -64,18 +64,14 @@ def event_listener():
 def main():
     while True:
         while rule.main() == 0:
-            if gamemod == 0 or gamemod == 1 or show_process:
-                event_listener()
-                draw()
             if gamemod == 1 or gamemod == 2:
-                #print ai.simulation(rule.get_board(),rule.get_player(),rule.get_player_move())
-                if player_type[int((-0.5*rule.get_player())+0.5)] == 'c':
+                if player_type[int((-0.5*rule.get_player())+0.5)] == 'c' and rule.main() == 0:
                     loc = ai.make_decision(rule.get_board(),rule.get_player(),rule.get_player_move())
                     rule.c_decision(loc)
-                    #print 'check 3: ' + str(rule.get_board().is_empty(loc))
-                    #print "empty_loc_list len 3: " + str (len(rule.get_board().get_empty_loc_list()))
-            #print '******'
-            #print "check" + str(rule.get_board().get_board())
+            if gamemod == 0 or gamemod == 1 or show_process:
+                event_listener()
+                rule.main()
+                draw()
         print "Winner is "+str(rule.get_board().check_win())
         if gamemod == 2:
             rule.start_new_game(None,None,None)
@@ -89,14 +85,14 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-board_size = 19
-win_length = 6
+board_size = 10
+win_length = 5
 first_player = 1
-piece_pre_player = 2
+piece_pre_player = 1
 first_player_piece = 1
-sim_num = 10
+sim_num = 2000
 player_type = ['p','p']
-show_process = True
+show_process = False
 gamemod = None
 
 if gamemod == None:
@@ -117,9 +113,9 @@ if gamemod == 0 or gamemod == 1 or show_process:
     clock = pygame.time.Clock()
 if gamemod == 1:
     player_type[1] = 'c'
-    ai = AI(Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,player_type),sim_num)
+    ai = AI(Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,['c','c']),sim_num)
 elif gamemod == 2:
     player_type = ['c','c']
-    ai = AI(Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,player_type),sim_num)
+    ai = AI(Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,['c','c']),sim_num)
 rule = Rule(None,board_size,win_length,first_player,piece_pre_player,first_player_piece,player_type)
 main()

@@ -19,6 +19,21 @@ class Rule:
         else:
             self.board = board
 
+    def get_empty_loc_list(self):
+        return self.board.get_empty_loc_list()
+
+    def get_random_loc(self,piece_win_chance_list):
+        maximum = sum([sum(x_raw)for x_raw in piece_win_chance_list])
+        if maximum > 0:
+            cumulative_probability = 0.0
+            key = random.uniform(0,maximum)
+            for loc in self.board.get_empty_loc_list():
+                cumulative_probability += piece_win_chance_list[1][0]
+                if cumulative_probability>key:
+                    return loc
+        loc = random.choice(self.board.get_empty_loc_list())
+        return loc
+
     def change_changing(self,idx,jdx,value):
         self.changing[idx][jdx] += value
 
@@ -38,8 +53,6 @@ class Rule:
             self.c_played = True
 
     def c_main(self,playernum):
-        #print self.c_decision(playernum)
-        #self.change_c_play_loc([random.randint(0,self.board_size-1),random.randint(0,self.board_size-1)])
         if self.c_played:
             self.player_play_piece(playernum)
             self.player_switch()
@@ -70,7 +83,6 @@ class Rule:
 
     def start_new_game(self,board,player,player_move):
         if player != None:
-            #print 'yeah'
             self.player = player
         else:
             self.player = self.first_player
@@ -79,10 +91,7 @@ class Rule:
         else:
             self.player_move = self.piece_pre_player-self.first_player_piece
         if board != None:
-            #print"b: " + str(self.board.get_board())
-            #print"in: " + str(board.get_board())
             self.board = board
-            #print"after: " + str(self.board.get_board())
         else:
             self.board = Board(self.board_size,self.win_length)
         self.changing = [[0,0],[0,0]]

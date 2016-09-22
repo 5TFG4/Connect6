@@ -16,18 +16,13 @@ class Board:
         self.piece_size = None
         self.gap = None
         self.surface = None
-        self.empty_loc_list = [[x,y] for x in xrange(self.size-1) for y in xrange (self.size-1) if self.contain[y][x] == 0]
+        self.empty_loc_list = [[x,y] for x in xrange(self.size) for y in xrange (self.size) if self.contain[y][x] == 0]
 
     def get_empty_loc_list(self):
         return self.empty_loc_list
 
-    def get_random_loc(self):
-        loc = random.choice(self.empty_loc_list)
-        return loc
-
     def update_empty_loc_list(self,loc):
         self.empty_loc_list.remove(loc)
-        #self.empty_loc_list = [[x,y] for x in xrange(self.size-1) for y in xrange (self.size-1) if self.contain[y][x] == 0]
 
     def is_empty(self,loc):
         if loc in self.empty_loc_list:
@@ -43,7 +38,6 @@ class Board:
         if self.is_empty(selected):
             self.contain[selected[1]][selected[0]] = player
             self.update_empty_loc_list(selected)
-            #self.update_empty_loc_list()
             return True
         else:
             return False
@@ -77,6 +71,8 @@ class Board:
             return 1
         elif -self.win_length in sum_list:
             return -1
+        elif len(self.empty_loc_list) == 0:
+            return -11
         else:
             return 0
 
