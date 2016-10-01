@@ -61,12 +61,15 @@ class Board:
                     self.selected_list[idx][jdx] = self.size-1
         return [[0,0],[0,0]]
 
-
-    def check_win(self):
+    def count_board(self):
         sum_list = [sum(self.contain[y][x:x+self.win_length]) for y in xrange(self.size) for x in xrange(self.size-self.win_length+1) if self.contain[y][x] != 0]
         sum_list += [sum([self.contain[y+idx][x] for idx in xrange(self.win_length)]) for y in xrange(self.size-self.win_length+1) for x in xrange(self.size) if self.contain[y][x] != 0]
         sum_list += [sum([self.contain[y+idx][x+idx] for idx in xrange(self.win_length)]) for y in xrange(self.size-self.win_length+1) for x in xrange(self.size-self.win_length+1) if self.contain[y][x] != 0]
         sum_list += [sum([self.contain[y+idx][x-idx] for idx in xrange(self.win_length)]) for y in xrange(self.size-self.win_length+1) for x in xrange(self.win_length-1,self.size) if self.contain[y][x] != 0]
+        return sum_list
+
+    def check_win(self):
+        sum_list = self.count_board()
         if self.win_length in sum_list:
             return 1
         elif -self.win_length in sum_list:
@@ -102,6 +105,9 @@ class Board:
             pygame.draw.rect(self.surface,Color(148,148,148),
             ((self.selected_list[0][0]*self.gap,self.selected_list[0][1]*self.gap),(self.piece_size*2,self.piece_size*2)),self.box_width)
         return self.surface
+
+    def get_selecting(self):
+        return self.selected_list
 
     def get_board_size(self):
         return self.size

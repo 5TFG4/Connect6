@@ -66,7 +66,7 @@ def main():
         while rule.main() == 0:
             if gamemod == 1 or gamemod == 2:
                 if player_type[int((-0.5*rule.get_player())+0.5)] == 'c' and rule.main() == 0:
-                    loc = ai.make_decision(rule.get_board(),rule.get_player(),rule.get_player_move())
+                    loc = ai.make_decision(rule.get_board(),rule.get_player(),rule.get_player_move(),rule.get_last_move()[int((0.5*rule.get_player())+0.5)])
                     rule.c_decision(loc)
             if gamemod == 0 or gamemod == 1 or show_process:
                 event_listener()
@@ -90,7 +90,7 @@ win_length = 5
 first_player = 1
 piece_pre_player = 1
 first_player_piece = 1
-sim_num = 2000
+sim_num = 5
 player_type = ['p','p']
 show_process = False
 gamemod = None

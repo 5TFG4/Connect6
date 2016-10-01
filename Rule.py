@@ -14,10 +14,14 @@ class Rule:
         self.board_size = board_size
         self.win_length = win_length
         self.c_played = False
+        self.last_move = [[],[]]
         if board == None:
             self.board = Board(self.board_size,self.win_length)
         else:
             self.board = board
+
+    def get_last_move(self):
+        return self.last_move
 
     def get_empty_loc_list(self):
         return self.board.get_empty_loc_list()
@@ -39,6 +43,7 @@ class Rule:
 
     def player_play_piece(self,player):
         if self.board.play_piece(player):
+            self.last_move[int((-0.5*player)+0.5)] = self.board.get_selecting()[int((-0.5*player)+0.5)]
             self.player_move += 1
             self.player_switch()
 
